@@ -3,15 +3,7 @@
             [advent.core :refer :all]))
 
 (deftest decompress-tests
-  (testing "No markers"
-    (is (= "ADVENT" (decompress "ADVENT"))))
-  (testing "Text before marker"
-    (is (= "ABBBBBC" (decompress "A(1x5)BC"))))
-  (testing "Marker at the beginning"
-    (is (= "XYZXYZXYZ" (decompress "(3x3)XYZ"))))
-  (testing "Multiple markers"
-    (is (= "ABCBCDEFEFG" (decompress "A(2x2)BCD(2x2)EFG"))))
-  (testing "Marker within characters affected by first marker is not processed"
-    (is (= "(1x3)A" (decompress "(6x1)(1x3)A"))))
-  (testing "Marker within characters affected by first marker is repeated normally"
-    (is (= "X(3x3)ABC(3x3)ABCY" (decompress "X(8x2)(3x3)ABCY")))))
+  (testing "Marker within decompressed data is re-processed"
+    (is (= 20 (solve "X(8x2)(3x3)ABCY")))
+    (is (= 241920 (solve "(27x12)(20x12)(13x14)(7x10)(1x12)A")))
+    (is (= 445 (solve "(25x3)(3x3)ABC(2x3)XY(5x2)PQRSTX(18x9)(3x2)TWO(5x7)SEVEN")))))
