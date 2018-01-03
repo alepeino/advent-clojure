@@ -1,7 +1,11 @@
 (ns advent.core)
 
-(def rows 3)
-(def cols 3)
+(def dim 5)
+
+(defn valid-space? [coords]
+  (or
+    (some #{2} coords)
+    (every? #{1 3} coords)))
 
 (defn constrain [n lower upper]
   (cond
@@ -9,25 +13,35 @@
     (> n upper) upper
     :else n))
 
-(defn digit-from-pos [[r c]]
-  (+ (* r cols) c 1))
-
 (defn move [[r0 c0] dir]
   (let [[r1 c1] ({\L [0 -1]
                   \R [0 1]
                   \U [-1 0]
                   \D [1 0]}
-                 dir)]
-    [(constrain (+ r0 r1) 0 (dec rows))
-     (constrain (+ c0 c1) 0 (dec cols))]))
+                 dir)
+        new-pos [(constrain (+ r0 r1) 0 (dec dim))
+                 (constrain (+ c0 c1) 0 (dec dim))]]
+    (if (valid-space? new-pos)
+      new-pos
+      [r0 c0])))
 
 (defn move-line [from line-cmd]
   (reduce move from line-cmd))
 
+(defn char-from-pos [pos]
+  (let [spaces (for [x (range 5) y (range 5)
+                     :when (valid-space? [x y])]
+                 [x y])]
+    (->> pos
+      (.indexOf spaces)
+      (inc)
+      (format "%X")
+      (first))))
+
 (defn solve [input]
-  (map digit-from-pos
+  (map char-from-pos
     (loop [result []
-           pos [1 1]
+           pos [2 0]
            [line & more] input]
       (if line
         (let [new-pos (move-line pos line)]
