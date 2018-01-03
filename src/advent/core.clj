@@ -11,9 +11,14 @@
   (->> (range)
     (map (partial str id))
     (map md5)
-    (filter #(clojure.string/starts-with? % "00000"))
-    (take 8)
-    (map #(nth % 5))
+    (filter (partial re-matches #"00000[0-7].+"))
+    (map #(subs % 5 7))
+    (reduce (fn [r [pos ch]]
+              (let [r2 (update r pos (fnil identity ch))]
+                (if (>= (count r2) 8) (reduced r2) r2)))
+            {})
+    (sort-by first)
+    (map second)
     (apply str)))
 
 (defn input [content]
