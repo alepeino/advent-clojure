@@ -17,7 +17,7 @@
 (defn solve [input]
   (->> input
     (iterate next-row)
-    (take 40)
+    (take 400000)
     (mapcat (partial keep #{\.}))
     (count)))
 
