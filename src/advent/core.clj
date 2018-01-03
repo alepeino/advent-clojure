@@ -11,4 +11,4 @@
     (apply +)))
 
 (defn -main []
-  (println (solve [4 5 1 0])))
+  (println (solve [8 5 1 0])))
