@@ -18,13 +18,20 @@
 (defn shortest [start finish passcode]
   (loop [paths {"" start}
          tried #{}]
-    (let [[path] (->> (keys paths) (remove tried) (sort-by count))
-          paths' (reduce (fn [m [dir loc]]
-                           (assoc m (str path dir) loc))
-                         paths
-                         (next-open passcode path (paths path)))]
-      (or (->> paths' (filter (comp #{finish} val)) (keep key) (first))
-          (recur paths' (conj tried path))))))
+    (if-let [path (->> paths
+                    (remove (comp #{finish} val))
+                    (map key)
+                    (remove tried)
+                    (first))]
+      (recur (reduce (fn [m [dir loc]]
+                       (assoc m (str path dir) loc))
+                     paths
+                     (next-open passcode path (paths path)))
+             (conj tried path))
+      (->> paths
+        (filter (comp #{finish} val))
+        (map (comp count key))
+        sort reverse first))))
 
 (defn solve [input]
   (shortest [0 0] [3 3] input))
