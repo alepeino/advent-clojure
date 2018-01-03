@@ -42,10 +42,10 @@
 
 (defn solve [input]
   (let [state (process (clojure.string/split-lines input))]
-    (->> (:log state)
-      (keep #(re-find #"bot (\d+) comparing chip 17 and chip 61" %))
-      (first)
-      (second))))
+    (->> state
+      (filter (comp #(re-find #"output [0|1|2]$" %) name first))
+      (mapcat (comp vec :chips second))
+      (apply *))))
 
 (defn -main []
   (println (solve (slurp "resources/input.txt"))))
