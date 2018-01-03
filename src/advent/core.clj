@@ -1,16 +1,13 @@
 (ns advent.core)
 
-(defn real? [name _ checksum]
-  (->> name
-    (frequencies)
-    (sort-by second)
-    (reverse)
-    (partition-by second)
-    (mapcat (partial sort-by first))
-    (map first)
-    (take 5)
-    (apply str)
-    (= checksum)))
+(defn rotate-char [ch steps]
+  (as-> "abcdefghijklmnopqrstuvwxyz" $
+    (cycle $)
+    (drop-while (partial not= ch) $)
+    (nth $ steps)))
+
+(defn rotate-str [st steps]
+  (apply str (map #(rotate-char % steps) st)))
 
 (defn input [content]
   (->> content
@@ -22,10 +19,10 @@
             c]))))
 
 (defn solve [input]
-  (->> input
-    (filter (partial apply real?))
-    (map second)
-    (apply +)))
+  (some (fn [[n i _]]
+          (when (#{"northpoleobjectstorage"}  (rotate-str n i))
+            i))
+        input))
 
 (defn -main []
   (prn (solve (input (slurp "resources/input.txt")))))

@@ -2,16 +2,18 @@
   (:require [clojure.test :refer :all]
             [advent.core :refer :all]))
 
-(deftest real?-tests
+(deftest rotate-char-tests
   (testing ""
-    (is (real? "aaaaabbbzyx" 123 "abxyz"))
-    (is (real? "abcdefgh" 987 "abcde"))
-    (is (real? "notarealroom" 404 "oarel"))
-    (is (not (real? "totallyrealroom" 200 "decoy")))))
+    (is (= \b (rotate-char \a 1)))
+    (is (= \m (rotate-char \c 10)))
+    (is (= \c (rotate-char \x 5)))
+    (is (= \j (rotate-char \j 0)))
+    (is (= \h (rotate-char \h 26)))
+    (is (= \r (rotate-char \q 2601)))))
 
-(deftest solve-test
+(deftest rotate-str-tests
   (testing ""
-    (is (= 1514 (solve (input (str "aaaaa-bbb-z-y-x-123[abxyz]\n"
-                                   "a-b-c-d-e-f-g-h-987[abcde]\n"
-                                   "not-a-real-room-404[oarel]\n"
-                                   "totally-real-room-200[decoy]\n")))))))
+    (is (= "bcd" (rotate-str "abc" 1)))
+    (is (= "mn" (rotate-str "cd" 10)))
+    (is (= "t" (rotate-str "t" 0)))
+    (is (= "rst" (rotate-str "qrs" 2601)))))
