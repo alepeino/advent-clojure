@@ -3,4 +3,4 @@
 /.lein-*
 /.nrepl-port
 /resources/output.txt
-
+/resources/disk

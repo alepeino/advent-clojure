@@ -1,7 +1,19 @@
-(ns advent.core)
+(ns advent.core
+  (:import java.io.File))
 
-(defn dragon [a]
-  (apply str a \0 (map {\0 \1 \1 \0} (reverse a))))
+(defn dragon [file limit]
+  (let [size (.length (File. file))
+        needed (- limit size)]
+    (when pos? needed
+      (let [s (slurp file)
+            append (->> s
+                     (drop (max (inc (- size needed)) 0))
+                     (map {\0 \1 \1 \0})
+                     (reverse)
+                     (apply str \0))]
+        (spit file append :append true)
+        (when (< (count append) needed)
+          (recur file limit))))))
 
 (defn checksum [s]
   (if (odd? (count s))
@@ -14,12 +26,11 @@
       (checksum))))
 
 (defn solve [input]
-  (let [len 272]
-    (->> (iterate dragon input)
-      (drop-while (comp (partial > len) count))
-      (first)
-      (take len)
-      (checksum))))
+  (let [len 35651584
+        file "resources/disk"]
+    (spit file input)
+    (dragon file len)
+    (checksum (slurp file))))
 
 (defn -main []
   (println (solve (slurp "resources/input.txt"))))
