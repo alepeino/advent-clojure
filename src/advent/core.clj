@@ -10,7 +10,7 @@
     (apply map str)
     (map frequencies)
     (map (partial sort-by second))
-    (map (comp first last))
+    (map (comp first first))
     (apply str)))
 
 (defn -main []
