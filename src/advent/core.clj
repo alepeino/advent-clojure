@@ -14,7 +14,8 @@
            (map (fn [s] (Integer. s)) $)))))
 
 (defn solve [input]
-  (count (filter valid? input)))
+  (let [input (->> input (apply interleave) (partition 3))]
+    (count (filter valid? input))))
 
 (defn -main []
   (prn (solve input)))
