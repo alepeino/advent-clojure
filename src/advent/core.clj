@@ -1,31 +1,30 @@
-(ns advent.core)
+(ns advent.core
+  (:require [clojure.set]))
 
 (defn input [strs]
   (->> strs
     (clojure.string/split-lines)
     (map clojure.string/trim)))
 
-(defn has-abba? [s]
-  (let [[a b b2 a2 & more] s]
-    (or (and (not= a b)
-             (= a a2)
-             (= b b2))
-        (when (seq more)
-	  (has-abba? (next s))))))
+(defn aba-and-bab? [out in]
+  (let [aba (fn [[a b a2]] (when (and (= a a2) (not= a b)) (seq [a b a2])))
+        aba->bab (fn [[a b]] (seq [b a b]))
+        get-abas #(->> % (iterate rest) (take-while seq) (keep aba))]
+    (seq (clojure.set/intersection
+           (->> out (mapcat get-abas) (set))
+           (->> in (mapcat get-abas) (map aba->bab) (set))))))
 
-(defn supports-tls? [s]
+(defn supports-ssl? [s]
   (->> s
     (partition-by #{\[ \]})
     (take-nth 2)
     ((juxt (partial take-nth 2)
            (comp (partial take-nth 2) rest)))
-    ((fn [[out in]]
-      (and (some has-abba? out)
-           (not-any? has-abba? in))))))
+    (apply aba-and-bab?)))
 
 (defn solve [input]
   (->> input
-    (filter supports-tls?)
+    (filter supports-ssl?)
     (count)))
 
 (defn -main []
