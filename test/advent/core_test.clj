@@ -40,12 +40,3 @@
           [1 1 1 1]] (rotate-column [[0 0 1 1]
                                      [0 1 0 1]
                                      [1 1 1 1]] 2 2))))
-
-(deftest integration-example
-  (with-redefs [rows 3
-                cols 7]
-    (let [input ["rect 3x2"
-                 "rotate column x=1 by 1"
-                 "rotate row y=0 by 4"
-                 "rotate column x=1 by 1"]]
-      (is (= 6 (solve input))))))

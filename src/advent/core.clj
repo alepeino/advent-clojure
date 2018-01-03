@@ -49,8 +49,10 @@
     (map clojure.string/trim)))
 
 (defn solve [input]
-  (reduce +
-    (map (partial reduce +) (apply-instructions input))))
+  (let [asciify #(if (zero? %) " " "@")]
+    (->> (apply-instructions input)
+      (map #(apply str (map asciify %)))
+      (clojure.string/join \newline))))
 
 (defn -main []
-  (prn (solve (input (slurp "resources/input.txt")))))
+  (println (solve (input (slurp "resources/input.txt")))))
