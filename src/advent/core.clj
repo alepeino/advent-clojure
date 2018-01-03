@@ -7,7 +7,7 @@
     (format "%032x")))
 
 (defn solve [salt]
-  (let [hasher (memoize md5)
+  (let [hasher (memoize #(nth (iterate md5 %) 2017))
         hashes (map (comp hasher (partial str salt)) (range))]
     (->> (range)
       (filter (fn [n]
