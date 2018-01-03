@@ -2,7 +2,7 @@
 
 (defn run [instructions]
   (let [reg-or-val (fn [reg x] (or (reg (keyword x)) (Integer. x)))]
-    (loop [reg {:a 0 :b 0 :c 0 :d 0}
+    (loop [reg {:a 0 :b 0 :c 1 :d 0}
            i 0]
       (if-let [instruction (get instructions i)]
         (let [[inst x y] (rest (re-find #"(\w+) ([\w-]+)(?: ([\w-]+))?" instruction))]
