@@ -7,7 +7,7 @@
                                     :start (Integer. start)}))))
 
 (defn solve [input]
-  (let [discs (parse-input input)
+  (let [discs (conj (vec (parse-input input)) {:positions 11 :start 0})
         endpos (map-indexed (fn [index {:keys [positions]}]
                               (->> (dec (- index))
                                 (iterate (partial + positions))
