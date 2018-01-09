@@ -15,15 +15,16 @@
 (defn rotate [r dir steps]
   (let [len (count r)
         steps (Integer. steps)
-        drop-steps (get {"left" steps
-                         "right" (- (* 2 len) steps)}
+        drop-steps (get {"left" (- (* 2 len) steps)
+                         "right" steps}
                         dir 0)]
     (->> (cycle r) (drop drop-steps) (take len))))
 
 (defn rotate-letter [r letter]
   (let [letter (first letter)
         n (->> r (take-while (partial not= letter)) (count))]
-    (rotate r "right" (+ n (if (< n 4) 1 2)))))
+    (rotate r "right" (quot (+ n 2 (if (even? n) (count r) 0))
+                            2))))
 
 (defn reverse-pos [r x y]
   (let [x (Integer. x)
@@ -36,9 +37,9 @@
   (let [x (Integer. x)
         y (Integer. y)]
     (->> r
-      (keep-indexed #(when (not= x %1) %2))
-      (split-at y)
-      (#(concat (first %) (->> r (drop x) (take 1)) (second %))))))
+      (keep-indexed #(when (not= y %1) %2))
+      (split-at x)
+      (#(concat (first %) (->> r (drop y) (take 1)) (second %))))))
 
 (defn solve [input]
   (apply str
@@ -53,8 +54,8 @@
             #"reverse positions (\d) through (\d)" :>> (transform reverse-pos)
             #"move position (\d) to position (\d)" :>> (transform move)
             r)))
-      "abcdefgh"
-      (clojure.string/split-lines input))))
+      "fbgdceah"
+      (reverse (clojure.string/split-lines input)))))
 
 (defn -main []
   (println (solve (slurp "resources/input.txt"))))
